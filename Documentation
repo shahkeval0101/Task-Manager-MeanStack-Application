@@ -1,0 +1,12 @@
+FrontEnd
+create new angular app
+installed bluma
+imported styles to styles.scss
+create new file main-styles.scss
+Created basic style of the TaskView app
+
+Backened
+npm init
+app.js => loaded express, test route and tested in postman
+installed mongoose
+install xyz
