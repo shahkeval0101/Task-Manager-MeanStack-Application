@@ -1,8 +1,9 @@
 const express = require('express');
 const app = express();
 
-const { mongoose } = require('./db/mongoose');
+require('./db/mongoose');
 
+//Node.js body parsing middleware. 
 const bodyParser = require('body-parser');
 
 // Load in the mongoose models
@@ -44,7 +45,7 @@ let authenticate = (req, res, next) => {
             res.status(401).send(err);
         } else {
             // jwt is valid
-            req.user_id = decoded._id;
+            req.user_id = decoded._id;//user that created it
             next();
         }
     });
@@ -137,7 +138,7 @@ app.post('/lists', authenticate, (req, res) => {
     let newList = new List({
         title,
         _userId: req.user_id
-    });
+    });//list created by which user
     newList.save().then((listDoc) => {
         // the full list document is returned (incl. id)
         res.send(listDoc);
@@ -159,7 +160,7 @@ app.patch('/lists/:id', authenticate, (req, res) => {
 
 /**
  * DELETE /lists/:id
- * Purpose: Delete a list
+ * Purpose: Delete a list and also deletes all the tasks of the list
  */
 app.delete('/lists/:id', authenticate, (req, res) => {
     // We want to delete the specified list (document with id in the URL)
@@ -189,6 +190,12 @@ app.get('/lists/:listId/tasks', authenticate, (req, res) => {
     })
 });
 
+///////////////////////////////////
+
+// Initially we find the list add/delete/update the task 
+// Once list is available we will then chain promise and add then perform operations on tasks
+
+//////////////////////////////////
 
 /**
  * POST /lists/:listId/tasks
@@ -203,7 +210,7 @@ app.post('/lists/:listId/tasks', authenticate, (req, res) => {
     }).then((list) => {
         if (list) {
             // list object with the specified conditions was found
-            // therefore the currently authenticated user can create new tasks
+            // therefore the currently authenticated user can create new tasks on that list
             return true;
         }
 
@@ -211,7 +218,7 @@ app.post('/lists/:listId/tasks', authenticate, (req, res) => {
         return false;
     }).then((canCreateTask) => {
         if (canCreateTask) {
-            let newTask = new Task({
+            let newTask = new Task({//adding task to the list
                 title: req.body.title,
                 _listId: req.params.listId
             });
@@ -312,7 +319,7 @@ app.post('/users', (req, res) => {
         return newUser.createSession();
     }).then((refreshToken) => {
         // Session created successfully - refreshToken returned.
-        // now we geneate an access auth token for the user
+        // now we generate an access auth token for the user
 
         return newUser.generateAccessAuthToken().then((accessToken) => {
             // access auth token generated successfully, now we return an object containing the auth tokens

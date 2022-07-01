@@ -24,6 +24,7 @@ export class TaskViewComponent implements OnInit {
       (params: Params) => {
         if (params.listId) {
           this.selectedListId = params.listId;
+          //Fetch tasks corresponding the list
           this.taskService.getTasks(params.listId).subscribe((tasks: any) => {
             this.tasks = tasks;
           })
@@ -32,7 +33,7 @@ export class TaskViewComponent implements OnInit {
         }
       }
     )
-
+    // Fetch lists corresponding the task
     this.taskService.getLists().subscribe((lists: any) => {
       this.lists = lists;
     })
