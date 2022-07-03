@@ -320,6 +320,7 @@ app.post('/users', (req, res) => {
 
     let body = req.body;
     let newUser = new User(body);
+    console.log(newUser)
     newUser.save().then(() => {
         console.log(newUser)
         return newUser.createSession();
