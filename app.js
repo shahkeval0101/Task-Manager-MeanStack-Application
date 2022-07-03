@@ -7,7 +7,7 @@ require('./db/mongoose');
 const bodyParser = require('body-parser');
 
 // Load in the mongoose models
-const { List, Task, User } = require('./db/models');
+const { List, Task, User } = require('./db/models/index');
 
 const jwt = require('jsonwebtoken');
 
@@ -17,6 +17,12 @@ const port = process.env.PORT || 8080
 // Load middleware
 app.use(bodyParser.json());
 
+const path = require('path');
+
+console.log(path.join(__dirname, 'frontend/public'))
+// app.use('/static', express.static(path.join(__dirname, 'frontend/public')));
+app.use(express.static(path.join(__dirname, 'frontend/public')));
+app.set('view engine','pug');
 
 // CORS HEADERS MIDDLEWARE
 app.use(function (req, res, next) {
@@ -314,13 +320,11 @@ app.post('/users', (req, res) => {
 
     let body = req.body;
     let newUser = new User(body);
-
     newUser.save().then(() => {
         return newUser.createSession();
     }).then((refreshToken) => {
         // Session created successfully - refreshToken returned.
         // now we generate an access auth token for the user
-
         return newUser.generateAccessAuthToken().then((accessToken) => {
             // access auth token generated successfully, now we return an object containing the auth tokens
             return { accessToken, refreshToken }
@@ -332,7 +336,7 @@ app.post('/users', (req, res) => {
             .header('x-access-token', authTokens.accessToken)
             .send(newUser);
     }).catch((e) => {
-        res.status(400).send(e);
+        res.status(400).send({e:"Error occcured"});
     })
 })
 
@@ -391,7 +395,10 @@ let deleteTasksFromList = (_listId) => {
     })
 }
 
-
+console.log(path.join(__dirname,'frontend/public/index.html'))
+app.get('*',(req,res)=>{
+    res.sendFile(path.join(__dirname,'frontend/public/index.html'));
+})
 
 
 app.listen(port , () => {
