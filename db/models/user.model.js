@@ -53,7 +53,7 @@ UserSchema.methods.generateAccessAuthToken = function () {
                 resolve(token);
             } else {
                 // there is an error
-                reject(err);
+                reject("access token",err);
             }
         })
     })
@@ -69,7 +69,7 @@ UserSchema.methods.generateRefreshAuthToken = function () {
 
                 return resolve(token);
             }
-            reject(err)
+            reject("refresh token" + err)
         })
     })
 }
@@ -174,7 +174,7 @@ let saveSessionToDatabase = (user, refreshToken) => {
             // saved session successfully
             return resolve(refreshToken);
         }).catch((e) => {
-            reject(e);
+            reject("save session to db"+e);
         });
     })
 }
