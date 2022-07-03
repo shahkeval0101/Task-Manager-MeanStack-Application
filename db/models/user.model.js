@@ -53,7 +53,7 @@ UserSchema.methods.generateAccessAuthToken = function () {
                 resolve(token);
             } else {
                 // there is an error
-                reject();
+                reject(err);
             }
         })
     })
@@ -69,6 +69,7 @@ UserSchema.methods.generateRefreshAuthToken = function () {
 
                 return resolve(token);
             }
+            reject(err)
         })
     })
 }
@@ -120,7 +121,7 @@ UserSchema.statics.findByCredentials = function (email, password) {
                     resolve(user);
                 }
                 else {
-                    reject();
+                    reject(err);
                 }
             })
         })

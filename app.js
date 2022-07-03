@@ -321,11 +321,14 @@ app.post('/users', (req, res) => {
     let body = req.body;
     let newUser = new User(body);
     newUser.save().then(() => {
+        console.log(newUser)
         return newUser.createSession();
     }).then((refreshToken) => {
+        console.log(refreshToken)
         // Session created successfully - refreshToken returned.
         // now we generate an access auth token for the user
         return newUser.generateAccessAuthToken().then((accessToken) => {
+            console.log(accessToken)
             // access auth token generated successfully, now we return an object containing the auth tokens
             return { accessToken, refreshToken }
         });
@@ -336,7 +339,7 @@ app.post('/users', (req, res) => {
             .header('x-access-token', authTokens.accessToken)
             .send(newUser);
     }).catch((e) => {
-        res.status(400).send({e:"Error occcured"});
+        res.status(400).send(e);
     })
 })
 
