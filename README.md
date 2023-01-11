@@ -1,7 +1,7 @@
 # Task-Manager-MeanStack-Application
 
 ## Code Reading
-1. Initially go to mongodb folder and run mongodb command - .\mongodb\bin\mongod.exe --dbpath=mongodb-data
+1. Initially go to mongodb folder and run mongodb command - .\mongodb\mongodb-win32-x86_64-windows-5.0.8\bin\mongod.exe --dbpath=mongodb-data
 2. Then go to ./api - npm i and node app.js
 3. Then go to ./frontend - npm i and ng serve
 
